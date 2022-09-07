@@ -1,9 +1,17 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetStaticProps } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import { Hero } from '../components/hero'
+import { Hero, HeroProps } from '../components/hero'
+import { Logos, LogoProps, LogoImages } from '../components/logos'
+import { Benefits, BenefitsProps, BenefitsColumns } from '../components/benefits'
+import { Contentful } from '../lib/utils'
 
-const Home: NextPage = () => {
+type HomeProps = {
+  hero: HeroProps;
+  logos: LogoProps;
+  benefits: BenefitsProps;
+}
+const Home: NextPage = (props) => {
+  const { hero, logos, benefits } = props as HomeProps;
   return (
     <div>
       <Head>
@@ -13,10 +21,71 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <Hero></Hero>
+        <Hero {...hero}></Hero>
+        <Logos {...logos}></Logos>
+        <Benefits {...benefits}></Benefits>
       </main>
     </div>
   )
+}
+
+export const getStaticProps: GetStaticProps = async() => {
+  const heroEntry = await Contentful.client.getEntry<HeroProps>("5pFmYQATYsH8GgqPvddck7")
+  const logos: LogoImages = [
+    {
+      src: '/logos/coinbase.svg',
+      height: '7',
+      alt: "Coinbase"
+    },
+    {
+      src: '/logos/shakepay.svg',
+      height: '8',
+      alt: "Shakepay"
+    }, {
+      src: '/logos/bakkt.svg',
+      height: '11',
+      alt: "Bakkt"
+    },
+    {
+      src: '/logos/fold.svg',
+      height: '12',
+      alt: "Fold"
+    }
+  ]
+  const benefitsColumns: BenefitsColumns = [
+    {
+      title: "Earn Crypto",
+      description: "Provide crypto rewards on debit and credit card purchases leveraging real-time transaction data.",
+      image: {
+        src: "/benefits/earn.svg",
+      }
+    },
+    {
+      title: "Spend Crypto",
+      description: "Allow users to spend their crypto balance by converting to fiat currency at the time the card is swiped.",
+      image: {
+        src: "/benefits/spend.svg",
+      }
+    }, {
+      title: "Leverage Crypto",
+      description: "Dynamically adjust fiat credit card limit based on user's crypto balance, powered by Deserve.",
+      image: {
+        src: "/benefits/leverage.svg",
+      }
+    }
+  ]
+  return {
+    props: {
+      hero: heroEntry.fields,
+      logos: {
+        images: logos
+      },
+      benefits: {
+        title: "Modern card issuing allows consumers to earn and spend crypto without having to change their spending habits",
+        columns: benefitsColumns
+      }
+    }
+  }
 }
 
 export default Home
