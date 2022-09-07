@@ -20,7 +20,7 @@ const Benefits = (props: BenefitsProps) => {
 	return (
 		<section className="mx-auto py-12 md:py-28">
 			<Container>
-				<div className="mx-auto mb-16 max-w-4xl text-center">
+				<div className="mx-auto mb-32 max-w-4xl text-center">
 					<h2 className="text-thin text-4xl text-primary">{title}</h2>
 				</div>
 				<div className="grid items-start gap-4 text-center md:grid-cols-3 md:gap-14">
